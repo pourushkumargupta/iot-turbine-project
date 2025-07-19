@@ -12,18 +12,14 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set working directory
+      - name: Debug Current Directory
         run: |
-          echo "Working dir before:" $(pwd)
-          cd iot-turbine-project
-          echo "Working dir after cd:" $(pwd)
-        working-directory: ${{ github.workspace }}
-
-      - name: Debug Logs Directory
-        run: |
-          echo "📂 Current Directory:"; pwd
-          echo "📄 Files in current directory:"; ls -la
-          echo "📁 Files inside logs/ directory:"; ls -la logs/ || echo "⚠️ logs/ folder not found"
+          echo "✅ Current Directory:"
+          pwd
+          echo "✅ Files in current directory:"
+          ls -la
+          echo "✅ Files in logs/ directory:"
+          ls -la logs/ || echo "⚠️ logs/ folder not found"
 
       - name: Set up Python
         uses: actions/setup-python@v4
@@ -31,9 +27,14 @@ jobs:
           python-version: '3.10'
 
       - name: Install dependencies
-        run: pip install -r requirements.txt
+        run: |
+          pip install -r requirements.txt
 
       - name: Run Notebook 1 (AutoEDA)
         run: |
           pip install papermill
           papermill notebooks/notebook1_autoeda_cleaning.ipynb notebooks/output_autoeda.ipynb
+
+      - name: Run Notebook 2 (AutoML)
+        run: |
+          papermill notebooks/notebook2_automl_modeling.ipynb notebooks/output_automl.ipynb
