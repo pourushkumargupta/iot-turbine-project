@@ -21,7 +21,7 @@ producer = KafkaProducer(
 )
 
 TOPIC_NAME = 'winddata'
-LOG_INTERVAL_SECONDS = 120  # ✅ Rotate log file every 30 seconds
+LOG_INTERVAL_SECONDS = 60  # ✅ Rotate log file every 30 seconds
 
 # ✅ Fetch data from TimescaleDB
 query = "SELECT * FROM wind_data ORDER BY date ASC;"
