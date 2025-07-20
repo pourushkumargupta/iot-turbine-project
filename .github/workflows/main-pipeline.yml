@@ -43,11 +43,13 @@ jobs:
           echo "✅ Files in logs/ directory AFTER generation:"
           ls -lh logs/
 
-      - name: Run Notebook 1 (AutoEDA)
+      - name: Run Notebook 1 (AutoEDA) with CI flag
         run: |
           pip install papermill
+          export CI_RUN=1
           papermill notebooks/notebook1_autoeda_cleaning.ipynb notebooks/output_autoeda.ipynb
 
-      - name: Run Notebook 2 (AutoML)
+      - name: Run Notebook 2 (AutoML) with CI flag
         run: |
+          export CI_RUN=1
           papermill notebooks/notebook2_automl_modeling.ipynb notebooks/output_automl.ipynb
