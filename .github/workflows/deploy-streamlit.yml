@@ -1,0 +1,28 @@
+name: Deploy Streamlit on EC2
+
+on:
+  push:
+    paths:
+      - 'streamlit-app/**'
+      - '.github/workflows/deploy-streamlit.yml'
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Install Streamlit Dependencies
+        run: |
+          cd streamlit-app
+          pip install -r requirements.txt
+
+      - name: Kill Existing Streamlit Process
+        run: |
+          pkill -f "streamlit run" || echo "No existing streamlit running"
+
+      - name: Start Streamlit App
+        run: |
+          nohup streamlit run streamlit-app/app.py --server.port 8501 --server.enableCORS false &
