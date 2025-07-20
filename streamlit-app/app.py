@@ -5,7 +5,7 @@ import pickle
 st.set_page_config(page_title="Wind Turbine Forecast Dashboard")
 
 # ✅ Load trained model
-with open('best_model.pkl', 'rb') as f:
+with open('../models/best_model.pkl', 'rb') as f:
     model = pickle.load(f)
 
 st.title("⛽ Wind Turbine Power Forecasting")
