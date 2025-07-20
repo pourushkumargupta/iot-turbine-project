@@ -16,19 +16,33 @@ jobs:
         run: |
           echo "✅ Current Directory:"
           pwd
-          echo "✅ Files in current directory:"
+          echo "✅ Files in project root:"
           ls -la
-          echo "✅ Files in logs/ directory BEFORE generation:"
-          ls -la logs/ || echo "⚠️ logs/ folder not found before generation"
+          echo "✅ Logs folder contents before generation:"
+          ls -la logs/ || echo "⚠️ logs/ folder not found"
 
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.10'
 
-      - name: Install dependencies
+      - name: Install Python dependencies
         run: |
           pip install -r requirements.txt
+
+      - name: ✅ Start PostgreSQL and Confirm Connection
+        run: |
+          sudo systemctl start postgresql
+          sudo systemctl enable postgresql
+          echo "✅ PostgreSQL status:"
+          sudo systemctl status postgresql --no-pager
+          echo "✅ Checking DB readiness..."
+          pg_isready -h 127.0.0.1 -p 5432 -U postgres
+
+      - name: ✅ Debug Port 5432 Open Status
+        run: |
+          echo "✅ Checking port 5432 status"
+          sudo netstat -tulnp | grep 5432 || echo "❌ Port 5432 not open"
 
       - name: ✅ Generate Dummy Log File
         run: |
@@ -36,20 +50,20 @@ jobs:
           log_name="log_$(date +'%Y%m%d_%H%M%S').csv"
           echo "date,wind_speed,power,nacelle_ambient_temp,generator_bearing_temp,gear_oil_temp,ambient_temp" > logs/$log_name
           echo "2022-01-01T00:00:00,3.1,178.7,8.7,15.9,13.0,8.7" >> logs/$log_name
-          echo "✅ Dummy log file created: logs/$log_name"
+          echo "✅ Dummy log created at logs/$log_name"
 
-      - name: Debug Logs Folder After Log Creation
+      - name: Debug Logs Folder After Log Generation
         run: |
-          echo "✅ Files in logs/ directory AFTER generation:"
           ls -lh logs/
 
-      - name: Run Notebook 1 (AutoEDA) with CI flag
+      - name: ✅ Run Notebook 1 (AutoEDA)
         run: |
           pip install papermill
           export CI_RUN=1
           papermill notebooks/notebook1_autoeda_cleaning.ipynb notebooks/output_autoeda.ipynb
 
-      - name: Run Notebook 2 (AutoML) with CI flag
+      - name: ✅ Run Notebook 2 (AutoML)
         run: |
           export CI_RUN=1
           papermill notebooks/notebook2_automl_modeling.ipynb notebooks/output_automl.ipynb
+
