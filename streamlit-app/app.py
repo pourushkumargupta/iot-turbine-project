@@ -26,3 +26,4 @@ if st.button("Generate Forecast"):
     st.success("✅ Forecast Generated!")
     st.dataframe(forecast.head(10))
     st.line_chart(forecast)
+# minor comment added
