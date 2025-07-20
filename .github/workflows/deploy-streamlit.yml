@@ -1,4 +1,4 @@
-name: Deploy Streamlit on EC2
+name: Deploy Streamlit on EC2 (Auto Restart)
 
 on:
   push:
@@ -14,15 +14,17 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v3
 
-      - name: Install Streamlit Dependencies
+      - name: Install Dependencies
         run: |
           cd streamlit-app
           pip install -r requirements.txt
 
-      - name: Kill Existing Streamlit Process
+      - name: Stop Old Streamlit Process
         run: |
-          pkill -f "streamlit run" || echo "No existing streamlit running"
+          pkill -f "streamlit run" || echo "✅ No old streamlit running"
 
-      - name: Start Streamlit App
+      - name: Start Streamlit App in Background
         run: |
-          nohup streamlit run streamlit-app/app.py --server.port 8501 --server.enableCORS false &
+          cd streamlit-app
+          nohup streamlit run app.py --server.address 0.0.0.0 --server.port 8501 > ~/streamlit.log 2>&1 &
+          echo "✅ Streamlit restarted on port 8501"
