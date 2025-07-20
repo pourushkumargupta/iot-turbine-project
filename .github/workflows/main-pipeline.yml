@@ -18,8 +18,8 @@ jobs:
           pwd
           echo "✅ Files in current directory:"
           ls -la
-          echo "✅ Files in logs/ directory:"
-          ls -la logs/ || echo "⚠️ logs/ folder not found"
+          echo "✅ Files in logs/ directory BEFORE generation:"
+          ls -la logs/ || echo "⚠️ logs/ folder not found before generation"
 
       - name: Set up Python
         uses: actions/setup-python@v4
@@ -29,6 +29,19 @@ jobs:
       - name: Install dependencies
         run: |
           pip install -r requirements.txt
+
+      - name: ✅ Generate Dummy Log File
+        run: |
+          mkdir -p logs
+          log_name="log_$(date +'%Y%m%d_%H%M%S').csv"
+          echo "date,wind_speed,power,nacelle_ambient_temp,generator_bearing_temp,gear_oil_temp,ambient_temp" > logs/$log_name
+          echo "2022-01-01T00:00:00,3.1,178.7,8.7,15.9,13.0,8.7" >> logs/$log_name
+          echo "✅ Dummy log file created: logs/$log_name"
+
+      - name: Debug Logs Folder After Log Creation
+        run: |
+          echo "✅ Files in logs/ directory AFTER generation:"
+          ls -lh logs/
 
       - name: Run Notebook 1 (AutoEDA)
         run: |
