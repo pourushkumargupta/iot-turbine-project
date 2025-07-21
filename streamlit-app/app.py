@@ -27,3 +27,4 @@ if st.button("Generate Forecast"):
     st.dataframe(forecast.head(10))
     st.line_chart(forecast)
 # minor comment added
+# minor comment_1 added
