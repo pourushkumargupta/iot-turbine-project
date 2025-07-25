@@ -28,7 +28,8 @@ if st.button("Generate Forecast"):
 
     st.success("✅ Forecast Generated!")
     st.write("🔍 Preview of Forecast:")
-    st.write(forecast_df.head(10))
+    st.text(forecast_df.head(10).to_string(index=False))
+
 
     # ✅ Plot only if numeric columns exist
     try:
@@ -37,4 +38,3 @@ if st.button("Generate Forecast"):
         st.warning(f"⚠️ Could not plot line chart: {e}")
 
 
-# minor comment added 8
