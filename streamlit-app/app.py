@@ -28,3 +28,4 @@ if st.button("Generate Forecast"):
     st.line_chart(forecast)
 # minor comment added
 # minor comment_1 added
+# minor comment added
