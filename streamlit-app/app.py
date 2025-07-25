@@ -1,4 +1,3 @@
-
 import streamlit as st
 import pandas as pd
 import pickle
@@ -23,12 +22,19 @@ st.title("⛽ Wind Turbine Power Forecasting")
 if st.button("Generate Forecast"):
     prediction = model.predict()
     forecast = prediction.forecast
+
+    # ✅ Safely convert forecast to simple Pandas DataFrame to avoid pyarrow dependency
+    forecast_df = pd.DataFrame(forecast)
+
     st.success("✅ Forecast Generated!")
-    st.dataframe(forecast.head(10))
-    st.line_chart(forecast)
-# minor comment added
-# minor comment_1 added
-# minor comment added
-# minor comment added4 
-# minor comment added4 
-# minor comment added 5
+    st.write("🔍 Preview of Forecast:")
+    st.write(forecast_df.head(10))
+
+    # ✅ Plot only if numeric columns exist
+    try:
+        st.line_chart(forecast_df.select_dtypes(include='number'))
+    except Exception as e:
+        st.warning(f"⚠️ Could not plot line chart: {e}")
+
+
+# minor comment added 8
